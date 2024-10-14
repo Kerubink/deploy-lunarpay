@@ -114,7 +114,6 @@
     overflow-y: auto; /* Adiciona rolagem vertical */
     max-height: 400px; /* Define uma altura máxima */
     border-radius: 8px; /* Borda arredondada */
-    background-color: rgba(255, 255, 255, 0.1); /* Fundo para melhor visibilidade */
   }
   
   .transactions .transactionsNav {
