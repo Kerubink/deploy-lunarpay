@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import InputMask from "react-input-mask"; // Importa o InputMask
 import styles from "./transfer.module.css";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import TagRoundedIcon from "@mui/icons-material/TagRounded";
@@ -15,7 +16,6 @@ export default function Transfer() {
   });
   const userId = localStorage.getItem("userId");
 
-  // Carrega os dados do usuário ao montar o componente
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -34,7 +34,7 @@ export default function Transfer() {
         }
 
         const data = await response.json();
-        setUserData(data); // Armazena os dados do usuário no estado
+        setUserData(data);
       } catch (error) {
         console.error("Erro:", error);
       }
@@ -45,18 +45,15 @@ export default function Transfer() {
     }
   }, [userId]);
 
-  // Lida com a submissão do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verifica se userData e formData são válidos
     if (!userData || !userData.accountNumber) {
       console.error("Dados do usuário não carregados corretamente:", userData);
       alert("Erro: dados do usuário não carregados.");
       return;
     }
 
-    // Validação dos dados do formulário
     if (
       !formData.receiverId ||
       !formData.amount ||
@@ -69,14 +66,14 @@ export default function Transfer() {
 
     try {
       const payload = {
-        senderAccountNumber: String(userData.accountNumber), // Alterado para senderAccountNumber
-        receiverAccountNumber: String(formData.receiverId), // Alterado para receiverAccountNumber
+        senderAccountNumber: String(userData.accountNumber),
+        receiverAccountNumber: String(formData.receiverId),
         amount: parseFloat(formData.amount),
         type: "transfer",
         description: formData.description,
       };
 
-      console.log("Payload enviado:", payload); // Verifica o payload
+      console.log("Payload enviado:", payload);
 
       const response = await fetch(
         "https://projeto-final-m5-api.onrender.com/api/transactions",
@@ -91,7 +88,7 @@ export default function Transfer() {
       );
 
       if (!response.ok) {
-        const errorData = await response.json(); // Captura o erro retornado
+        const errorData = await response.json();
         console.error("Erro da API:", errorData);
         alert(`Erro na transferência: ${errorData.message}`);
         return;
@@ -105,7 +102,7 @@ export default function Transfer() {
     }
   };
 
-  if (!userData) return <Loader />; // Exibe mensagem de carregamento enquanto busca os dados
+  if (!userData) return <Loader />;
 
   return (
     <>
@@ -128,30 +125,38 @@ export default function Transfer() {
 
           <form className={styles.formTransfer} onSubmit={handleSubmit}>
             <div className={styles.input_field}>
-              <input
+              <InputMask
                 required 
                 name="receiverId"
-                type="number"
+                mask="999999999-9" // Formato do número da conta
                 value={formData.receiverId}
                 onChange={(e) =>
                   setFormData({ ...formData, receiverId: e.target.value })
                 }
-              />
+              >
+                {(inputProps) => (
+                  <input {...inputProps} />
+                )}
+              </InputMask>
               <label>Número da conta</label>
               <span className={styles.icon}>
                 <TagRoundedIcon />
               </span>
             </div>
             <div className={styles.input_field}>
-              <input
+              <InputMask
                 required
                 name="amount"
-                type="number"
+                mask="9999,99" // Formato do valor
                 value={formData.amount}
                 onChange={(e) =>
                   setFormData({ ...formData, amount: e.target.value })
                 }
-              />
+              >
+                {(inputProps) => (
+                  <input {...inputProps} />
+                )}
+              </InputMask>
               <label>Valor enviado</label>
               <span className={styles.icon}>
                 <AttachMoneyRoundedIcon />
