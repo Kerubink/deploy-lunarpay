@@ -88,7 +88,8 @@ const ProfilePage = () => {
   return (
     <>
       <Animation />
-      <div className={styles.profilePage}> {/* Usando estilos do módulo */}
+      
+      <div className={styles.profilePage}> 
         <nav className={styles.navbar}>
           <div className={styles.titleProfile}> 
             <h2>Perfil</h2>
